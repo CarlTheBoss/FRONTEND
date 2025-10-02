@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sistema de Gestión de Productos</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+                font-size: 2.5em;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            h2 {
+                color: #555;
+                margin-top: 30px;
+                margin-bottom: 20px;
+                font-size: 1.8em;
+                border-bottom: 3px solid #667eea;
+                padding-bottom: 10px;
+            }
+
+            h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 1.2em;
+            }
+
+            .search-section {
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .search-input {
+                width: 100%;
+                max-width: 600px;
+                padding: 15px 20px;
+                font-size: 16px;
+                border: 2px solid #ddd;
+                border-radius: 50px;
+                outline: none;
+                transition: all 0.3s ease;
+            }
+
+            .search-input:focus {
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+
+            .stat-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 25px;
+                border-radius: 15px;
+                text-align: center;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .stat-card h3 {
+                color: white;
+                font-size: 1em;
+                margin-bottom: 10px;
+                opacity: 0.9;
+            }
+
+            .stat-number {
+                font-size: 2.5em;
+                font-weight: bold;
+                margin: 0;
+            }
+
+            .products-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 20px;
+                margin-bottom: 40px;
+            }
+
+            .product-card {
+                background: #f8f9fa;
+                border: 2px solid #e9ecef;
+                border-radius: 15px;
+                padding: 20px;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .product-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                border-color: #667eea;
+            }
+
+            .product-card h3 {
+                color: #667eea;
+                margin-bottom: 15px;
+                font-size: 1.3em;
+            }
+
+            .product-details {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .product-details p {
+                color: #555;
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .product-details strong {
+                color: #333;
+                font-weight: 600;
+            }
+
+            .active {
+                color: #28a745;
+                font-weight: bold;
+            }
+
+            .inactive {
+                color: #dc3545;
+                font-weight: bold;
+            }
+
+            .no-products {
+                text-align: center;
+                color: #999;
+                font-size: 1.2em;
+                padding: 40px;
+                background: #f8f9fa;
+                border-radius: 10px;
+                margin: 20px 0;
+            }
+
+            .data-sections {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+                margin-top: 40px;
+            }
+
+            .data-section {
+                background: #f8f9fa;
+                padding: 25px;
+                border-radius: 15px;
+                border: 2px solid #e9ecef;
+            }
+
+            .data-section h2 {
+                font-size: 1.3em;
+                margin-top: 0;
+                border-bottom: 2px solid #667eea;
+            }
+
+            .data-list {
+                list-style: none;
+                padding: 0;
+            }
+
+            .data-list li {
+                padding: 12px 15px;
+                margin-bottom: 8px;
+                background: white;
+                border-radius: 8px;
+                border-left: 4px solid #667eea;
+                transition: all 0.2s ease;
+            }
+
+            .data-list li:hover {
+                background: #667eea;
+                color: white;
+                transform: translateX(5px);
+            }
+
+            .loading {
+                text-align: center;
+                padding: 40px;
+                color: #667eea;
+                font-size: 1.2em;
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 20px;
+                }
+
+                h1 {
+                    font-size: 1.8em;
+                }
+
+                h2 {
+                    font-size: 1.4em;
+                }
+
+                .products-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .stats {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .data-sections {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div class="container">
+                <h1>Sistema de Gestión de Productos</h1>
+
+                <div class="search-section">
+                    <input
+                        type="text"
+                        v-model="searchTerm"
+                        placeholder="Buscar productos por nombre..."
+                        class="search-input"
+                    />
+                </div>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>Productos</h3>
+                        <p class="stat-number">{{ productos.length }}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Categorías</h3>
+                        <p class="stat-number">{{ categorias.length }}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Marcas</h3>
+                        <p class="stat-number">{{ marcas.length }}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Unidades</h3>
+                        <p class="stat-number">{{ unidades.length }}</p>
+                    </div>
+                </div>
+
+                <h2>Lista de Productos</h2>
+                <div v-if="loading" class="loading">Cargando productos...</div>
+                <div
+                    v-else-if="filteredProductos.length > 0"
+                    class="products-grid"
+                >
+                    <div
+                        v-for="producto in filteredProductos"
+                        :key="producto.id_pro || producto.id"
+                        class="product-card"
+                    >
+                        <h3>{{ producto.nom_pro || producto.name }}</h3>
+                        <div class="product-details">
+                            <p>
+                                <strong>Precio:</strong> ${{ (producto.pre_pro
+                                || producto.price) ? (producto.pre_pro ||
+                                producto.price).toFixed(2) : '0.00' }}
+                            </p>
+                            <p>
+                                <strong>Stock:</strong> {{ producto.stk_pro ||
+                                producto.stock || 0 }}
+                            </p>
+                            <p>
+                                <strong>Categoría:</strong> {{
+                                getCategoriaNombre(producto.id_cat ||
+                                producto.categoryId) }}
+                            </p>
+                            <p>
+                                <strong>Marca:</strong> {{
+                                getMarcaNombre(producto.id_marca ||
+                                producto.marcaId) }}
+                            </p>
+                            <p>
+                                <strong>Unidad:</strong> {{
+                                getUnidadNombre(producto.id_uni ||
+                                producto.unitId) }}
+                            </p>
+                            <p>
+                                <strong>Estado:</strong>
+                                <span
+                                    :class="(producto.estado || producto.state) === 'Y' ? 'active' : 'inactive'"
+                                >
+                                    {{ (producto.estado || producto.state) ===
+                                    'Y' ? 'Activo' : 'Inactivo' }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <p v-else class="no-products">No se encontraron productos</p>
+
+                <div class="data-sections">
+                    <div class="data-section">
+                        <h2>Categorías Disponibles</h2>
+                        <ul class="data-list" v-if="categorias.length > 0">
+                            <li
+                                v-for="categoria in categorias"
+                                :key="categoria.id_cat || categoria.id"
+                            >
+                                {{ categoria.nom_cat || categoria.nombre }}
+                            </li>
+                        </ul>
+                        <p v-else class="no-products" style="padding: 20px">
+                            No hay categorías disponibles
+                        </p>
+                    </div>
+
+                    <div class="data-section">
+                        <h2>Marcas Disponibles</h2>
+                        <ul class="data-list" v-if="marcas.length > 0">
+                            <li
+                                v-for="marca in marcas"
+                                :key="marca.id_marca || marca.id"
+                            >
+                                {{ marca.nom_marca || marca.nombre }}
+                            </li>
+                        </ul>
+                        <p v-else class="no-products" style="padding: 20px">
+                            No hay marcas disponibles
+                        </p>
+                    </div>
+
+                    <div class="data-section">
+                        <h2>Unidades Disponibles</h2>
+                        <ul class="data-list" v-if="unidades.length > 0">
+                            <li
+                                v-for="unidad in unidades"
+                                :key="unidad.id_uni || unidad.id"
+                            >
+                                {{ unidad.nom_uni || unidad.nombre }}
+                            </li>
+                        </ul>
+                        <p v-else class="no-products" style="padding: 20px">
+                            No hay unidades disponibles
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const { createApp, ref, onMounted, computed } = Vue;
+
+            createApp({
+                setup() {
+                    const productos = ref([]);
+                    const categorias = ref([]);
+                    const marcas = ref([]);
+                    const unidades = ref([]);
+                    const searchTerm = ref("");
+                    const loading = ref(true);
+
+                    const fetchCategorias = async () => {
+                        try {
+                            const response = await fetch(
+                                "http://localhost:5000/categorias",
+                            );
+                            let data = await response.json();
+                            // Si la respuesta tiene un array, lo usa directamente
+                            // Si tiene una propiedad data o similar, lo extrae
+                            if (data && !Array.isArray(data) && data.data) {
+                                data = data.data;
+                            }
+                            categorias.value = Array.isArray(data) ? data : [];
+                            console.log(
+                                "Categorías cargadas:",
+                                categorias.value,
+                            );
+                        } catch (error) {
+                            console.error("Error fetching categorías:", error);
+                        }
+                    };
+
+                    const fetchMarcas = async () => {
+                        try {
+                            const response = await fetch(
+                                "http://localhost:5000/marcas",
+                            );
+                            let data = await response.json();
+                            // Si la respuesta tiene un array, lo usa directamente
+                            // Si tiene una propiedad data o similar, lo extrae
+                            if (data && !Array.isArray(data) && data.data) {
+                                data = data.data;
+                            }
+                            marcas.value = Array.isArray(data) ? data : [];
+                            console.log("Marcas cargadas:", marcas.value);
+                        } catch (error) {
+                            console.error("Error fetching marcas:", error);
+                        }
+                    };
+
+                    const fetchUnidades = async () => {
+                        try {
+                            const response = await fetch(
+                                "http://localhost:5000/unidades",
+                            );
+                            let data = await response.json();
+                            // Si la respuesta tiene un array, lo usa directamente
+                            // Si tiene una propiedad data o similar, lo extrae
+                            if (data && !Array.isArray(data) && data.data) {
+                                data = data.data;
+                            }
+                            unidades.value = Array.isArray(data) ? data : [];
+                            console.log("Unidades cargadas:", unidades.value);
+                        } catch (error) {
+                            console.error("Error fetching unidades:", error);
+                        }
+                    };
+
+                    const fetchProductos = async () => {
+                        try {
+                            const response = await fetch(
+                                "http://localhost:5000/productos",
+                            );
+                            let data = await response.json();
+                            // Si la respuesta tiene un array, lo usa directamente
+                            // Si tiene una propiedad data o similar, lo extrae
+                            if (data && !Array.isArray(data) && data.data) {
+                                data = data.data;
+                            }
+                            productos.value = Array.isArray(data) ? data : [];
+                            console.log("Productos cargados:", productos.value);
+                        } catch (error) {
+                            console.error("Error fetching productos:", error);
+                        } finally {
+                            loading.value = false;
+                        }
+                    };
+
+                    const filteredProductos = computed(() => {
+                        if (!searchTerm.value) {
+                            return productos.value;
+                        }
+                        return productos.value.filter((producto) => {
+                            const nombre =
+                                producto.nom_pro || producto.name || "";
+                            return nombre
+                                .toLowerCase()
+                                .includes(searchTerm.value.toLowerCase());
+                        });
+                    });
+
+                    const getCategoriaNombre = (id_cat) => {
+                        const categoria = categorias.value.find(
+                            (cat) => (cat.id_cat || cat.id) === id_cat,
+                        );
+                        return categoria
+                            ? categoria.nom_cat || categoria.nombre
+                            : "Sin categoría";
+                    };
+
+                    const getMarcaNombre = (id_marca) => {
+                        const marca = marcas.value.find(
+                            (mar) => (mar.id_marca || mar.id) === id_marca,
+                        );
+                        return marca
+                            ? marca.nom_marca || marca.nombre
+                            : "Sin marca";
+                    };
+
+                    const getUnidadNombre = (id_uni) => {
+                        const unidad = unidades.value.find(
+                            (uni) => (uni.id_uni || uni.id) === id_uni,
+                        );
+                        return unidad
+                            ? unidad.nom_uni || unidad.nombre
+                            : "Sin unidad";
+                    };
+
+                    onMounted(() => {
+                        fetchCategorias();
+                        fetchMarcas();
+                        fetchUnidades();
+                        fetchProductos();
+                    });
+
+                    return {
+                        productos,
+                        categorias,
+                        marcas,
+                        unidades,
+                        searchTerm,
+                        loading,
+                        filteredProductos,
+                        getCategoriaNombre,
+                        getMarcaNombre,
+                        getUnidadNombre,
+                    };
+                },
+            }).mount("#app");
+        </script>
+    </body>
+</html>
