@@ -6,6 +6,10 @@ import os
 app = Flask(__name__, static_folder=".")
 CORS(app)
 
+# Configuración para producción
+app.config["JSON_AS_ASCII"] = False
+app.config["JSON_SORT_KEYS"] = False
+
 # URLs de las APIs
 API_CATEGORIAS = "http://localhost:3001/"  # Python
 API_MARCAS = "https://apimarcas.onrender.com/api/marcas"  # Node.js en Render
@@ -201,4 +205,17 @@ def health_check():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Obtener configuración desde variables de entorno
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_ENV", "production") != "production"
+    host = os.environ.get("HOST", "0.0.0.0")
+
+    print(f"🚀 Iniciando servidor en {host}:{port}")
+    print(f"🔧 Modo: {'Development' if debug else 'Production'}")
+    print(f"🌐 APIs configuradas:")
+    print(f"   - Categorías: {API_CATEGORIAS}")
+    print(f"   - Marcas: {API_MARCAS}")
+    print(f"   - Unidades: {API_UNIDADES}")
+    print(f"   - Productos: {API_PRODUCTOS[:50]}...")
+
+    app.run(host=host, port=port, debug=debug)

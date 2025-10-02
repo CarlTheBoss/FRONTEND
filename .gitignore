@@ -112,6 +112,9 @@ instance/
 *.tmp
 *~
 
+# Docker
+.dockerignore
+
 # Compiled files
 *.com
 *.class

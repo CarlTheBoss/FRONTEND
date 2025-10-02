@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # API Gateway (Flask)
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=api.py
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - product-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  product-network:
+    driver: bridge
+
+# Notas:
+# - Este docker-compose solo contiene el Gateway porque las otras APIs
+#   están desplegadas en servicios externos (Render, Wasmer, Cloud Workstations)
+#
+# Para ejecutar:
+#   docker-compose up -d
+#
+# Para detener:
+#   docker-compose down
+#
+# Para ver logs:
+#   docker-compose logs -f gateway
+#
+# Para reconstruir:
+#   docker-compose up -d --build
