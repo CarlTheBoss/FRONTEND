@@ -1,5 +1,7 @@
 const { createApp, ref, onMounted, computed } = Vue;
 
+const host = window.location.protocol + "//" + window.location.host;
+
 const app = createApp({
   setup() {
     const productos = ref([]);
@@ -11,7 +13,7 @@ const app = createApp({
     // API 1: Categorías (Python - Puerto 3001)
     const fetchCategorias = async () => {
       try {
-        const response = await fetch('http://localhost:3001/');
+        const response = await fetch(`${host}/categorias`);
         const data = await response.json();
         categorias.value = data;
         console.log('Categorías cargadas:', data);
@@ -23,7 +25,7 @@ const app = createApp({
     // API 2: Marcas (Node.js - Puerto 3002)
     const fetchMarcas = async () => {
       try {
-        const response = await fetch('http://localhost:3002/');
+        const response = await fetch(`${host}/marcas`);
         const data = await response.json();
         marcas.value = data;
         console.log('Marcas cargadas:', data);
@@ -35,7 +37,7 @@ const app = createApp({
     // API 3: Unidades (PHP - Puerto 3003)
     const fetchUnidades = async () => {
       try {
-        const response = await fetch('http://localhost:3003/');
+        const response = await fetch(`${host}/unidades`);
         const data = await response.json();
         unidades.value = data;
         console.log('Unidades cargadas:', data);
@@ -47,7 +49,7 @@ const app = createApp({
     // API 4: Productos (Java - Puerto 8080)
     const fetchProductos = async () => {
       try {
-        const response = await fetch('https://8080-firebase-product-service-java-1759371536787.cluster-fsmcisrvfbb5cr5mvra3hr3qyg.cloudworkstations.dev/api/v1/products');
+        const response = await fetch(`${host}/productos`);
         const data = await response.json();
         productos.value = data;
         console.log('Productos cargados:', data);
