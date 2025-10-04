@@ -466,13 +466,18 @@
                     const fetchProductos = async () => {
                         try {
                             const response = await fetch(`${apiUrl}/productos`);
-                            let data = await response.json();
-                            // Si la respuesta tiene un array, lo usa directamente
-                            // Si tiene una propiedad data o similar, lo extrae
-                            if (data && !Array.isArray(data) && data.data) {
-                                data = data.data;
+                            const data = await response.json();
+                            // La nueva API de productos devuelve un objeto { items: [...] }
+                            if (data && Array.isArray(data.items)) {
+                                productos.value = data.items;
+                            } else {
+                                // Fallback en caso de que la estructura no sea la esperada
+                                productos.value = [];
+                                console.warn(
+                                    "La respuesta de la API de productos no tiene el formato esperado:",
+                                    data,
+                                );
                             }
-                            productos.value = Array.isArray(data) ? data : [];
                             console.log("Productos cargados:", productos.value);
                         } catch (error) {
                             console.error("Error fetching productos:", error);
