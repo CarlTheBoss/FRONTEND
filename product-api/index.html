@@ -397,6 +397,12 @@
 
             createApp({
                 setup() {
+                    const isLocal = ["localhost", "127.0.0.1"].includes(
+                        window.location.hostname,
+                    );
+                    const apiUrl = isLocal
+                        ? "http://localhost:5000"
+                        : "https://frontend-hyiz.onrender.com";
                     const productos = ref([]);
                     const categorias = ref([]);
                     const marcas = ref([]);
