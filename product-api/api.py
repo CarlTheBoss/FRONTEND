@@ -11,7 +11,7 @@ app.config["JSON_AS_ASCII"] = False
 app.config["JSON_SORT_KEYS"] = False
 
 # URLs de las APIs
-API_CATEGORIAS = "http://localhost:3001/"  # Python
+API_CATEGORIAS = "https://api-categoria-a8hp.onrender.com/categorias"  # Python
 API_MARCAS = "https://apimarcas.onrender.com/api/marcas"  # Node.js en Render
 API_UNIDADES = "https://php-75bb6.wasmer.app/index.php?api=1"  # PHP en Wasmer
 API_PRODUCTOS = "https://8080-firebase-product-service-java-1759371536787.cluster-fsmcisrvfbb5cr5mvra3hr3qyg.cloudworkstations.dev/api/v1/products"  # Java
