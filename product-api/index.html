@@ -413,7 +413,7 @@
                     const fetchCategorias = async () => {
                         try {
                             const response = await fetch(
-                                "http://localhost:5000/categorias",
+                                `${apiUrl}/categorias`,
                             );
                             let data = await response.json();
                             // Si la respuesta tiene un array, lo usa directamente
@@ -433,9 +433,7 @@
 
                     const fetchMarcas = async () => {
                         try {
-                            const response = await fetch(
-                                "http://localhost:5000/marcas",
-                            );
+                            const response = await fetch(`${apiUrl}/marcas`);
                             let data = await response.json();
                             // Si la respuesta tiene un array, lo usa directamente
                             // Si tiene una propiedad data o similar, lo extrae
@@ -451,9 +449,7 @@
 
                     const fetchUnidades = async () => {
                         try {
-                            const response = await fetch(
-                                "http://localhost:5000/unidades",
-                            );
+                            const response = await fetch(`${apiUrl}/unidades`);
                             let data = await response.json();
                             // Si la respuesta tiene un array, lo usa directamente
                             // Si tiene una propiedad data o similar, lo extrae
@@ -469,9 +465,7 @@
 
                     const fetchProductos = async () => {
                         try {
-                            const response = await fetch(
-                                "http://localhost:5000/productos",
-                            );
+                            const response = await fetch(`${apiUrl}/productos`);
                             let data = await response.json();
                             // Si la respuesta tiene un array, lo usa directamente
                             // Si tiene una propiedad data o similar, lo extrae
